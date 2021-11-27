@@ -37,6 +37,7 @@ function load() {
 
   const firstDayOfMonth = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevDaysInMonth = new Date(year, month, 0).getDate();
   
   const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
     weekday: 'long',
@@ -51,19 +52,49 @@ function load() {
 
   calendar.innerHTML = '';
 
-  for(let i = 1; i <= paddingDays + daysInMonth; i++) {
+  let dayNum = 35;
+  if(paddingDays + daysInMonth > 35){
+    dayNum = 42;
+  }
+  for(let i = 1; i <= dayNum; i++) {
     const daySquare = document.createElement('div');
     daySquare.classList.add('day');
 
-    const dayString = `${month + 1}/${i - paddingDays}/${year}`;
+    
+    //const dayString = `${month + 1}/${i - paddingDays}/${year}`;
 
-    if (i > paddingDays) {
+    if(i <= paddingDays){
+      daySquare.classList.add('prevday');
+      const dayString = `${month + 1}/${prevDaysInMonth - i + paddingDays}/${year}`;
+      daySquare.innerText = prevDaysInMonth + i - paddingDays
+      const eventForDay = events.find(e => e.date === dayString);
+
+      if (i - paddingDays === day && nav === 0) {
+        daySquare.id = 'currentDay';
+      }
+
+      //if()
+
+     if (eventForDay) {
+        const eventDiv = document.createElement('div');
+        eventDiv.classList.add('event');
+        eventDiv.innerText = eventForDay.title;
+        daySquare.appendChild(eventDiv);
+      }
+
+      daySquare.addEventListener('click', () => openModal(dayString));
+    }
+    else if (i > paddingDays && i <= daysInMonth + paddingDays) {
+      daySquare.classList.add('day');
+      const dayString = `${month + 1}/${i - paddingDays}/${year}`;
       daySquare.innerText = i - paddingDays;
       const eventForDay = events.find(e => e.date === dayString);
 
       if (i - paddingDays === day && nav === 0) {
         daySquare.id = 'currentDay';
       }
+
+      //if()
 
       if (eventForDay) {
         const eventDiv = document.createElement('div');
@@ -73,8 +104,27 @@ function load() {
       }
 
       daySquare.addEventListener('click', () => openModal(dayString));
-    } else {
-      daySquare.classList.add('padding');
+    }
+    else {
+      daySquare.classList.add('nextday');
+      const dayString = `${month + 1}/${i - daysInMonth - paddingDays}/${year}`;
+      daySquare.innerText = i - daysInMonth - paddingDays;
+      const eventForDay = events.find(e => e.date === dayString);
+
+      if (i - paddingDays === day && nav === 0) {
+        daySquare.id = 'currentDay';
+      }
+
+      //if()
+
+      if (eventForDay) {
+        const eventDiv = document.createElement('div');
+        eventDiv.classList.add('event');
+        eventDiv.innerText = eventForDay.title;
+        daySquare.appendChild(eventDiv);
+      }
+
+      daySquare.addEventListener('click', () => openModal(dayString));
     }
 
     calendar.appendChild(daySquare);    
