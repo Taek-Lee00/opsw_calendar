@@ -178,10 +178,10 @@ function deleteEvent() {
 let monthClick = 0;
 
 function initButtons() {
-  document.getElementById('monthlySchedule').addEventListener('click', () => {
-    monthlyCheck = 1;
-    openModal();
-  });
+  // document.getElementById('monthlySchedule').addEventListener('click', () => {
+  //   monthlyCheck = 1;
+  //   openModal();
+  // });
 
   document.getElementById('nextButton').addEventListener('click', () => {
     nav++;
