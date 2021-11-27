@@ -13,14 +13,14 @@ function openList(eventDay) {
     eventtitle.classList.add('List-title')
     eventtitle.innerText = eventDay.date;
     dayList.append(eventtitle);
-    for (let k = 0 ; k<eventDay.lists.length; k++){
+    for (let k = 0; k < eventDay.lists.length; k++) {
         const oneList = document.createElement('div');
-        oneList.createElement('input',{type : "checkbox",id:"checkbox",})
-        oneList.createElement('label',{for : "cb",})
+        oneList.createElement('input', { type: "checkbox", id: "checkbox", })
+        oneList.createElement('label', { for: "cb", })
         oneList.innerText = eventDay.lists[k];
         eventList.appendChild(oneList);
     }
-        dayList.appendChild(eventList);
+    dayList.appendChild(eventList);
 }
 
 function setDate() {
@@ -51,22 +51,45 @@ function setDate() {
             dayContent.classList.add('currentDay');
         const eventCheck = `${year}-${month}-${i + 1}`
         const eventDay = events.find(e => e.date === eventCheck)
-        if(eventDay !== null){
+        if (eventDay !== null) {
             const eventList = document.createElement('div');
             eventList.classList.add('List');
-            for (let k = 0 ; k<eventDay.lists.length; k++){
-               const oneList = document.createElement('div');
-               //oneList.createElement('input',{type : "checkbox",id:"checkbox",})
-               //oneList.createElement('label',{for : "cb",})
-               oneList.innerText = eventDay.lists[k];
+            for (let k = 0; k < eventDay.lists.length; k++) {
+                const oneList = document.createElement('div');
+               // oneList.createElement('input',{type : "checkbox",id:"checkbox",})
+                //oneList.createElement('label',{for : "cb",})
+                oneList.innerText = eventDay.lists[k];
 
                 eventList.appendChild(oneList);
             }
-             dayContent.appendChild(eventList);
+            dayContent.appendChild(eventList);
         }
-        dayContent.addEventListener('click',() => openList(eventDay))
+        dayContent.addEventListener('click', () => openList(eventDay))
         calendar.appendChild(dayContent);
     }
+}
 
+function closeList() {
+    dayList.style.display = 'none';
+    setDate()
+}
 
+function saveList(eventCheck){
+    events[""].push({
+        date:  "date",
+        lists: [""],
+    });
+    localStorage.setItem('events', JSON.stringify(events));
+    openList(eventDay)
+}
+
+function removeList(eventCheck){
+    let eventDay = events.find(e => e.date === eventCheck)
+    let dayList = eventDay.lists;
+    dayList = dayList.filter( e => e !== rmoveOne)
+    eventDay.lists = dayList;
+    events = events.filter(e => e.date !== eventCheck);
+    events.push(eventDay);
+    localStorage.setItem('events', JSON.stringify(events))
+    openList(eventDay)
 }
