@@ -66,7 +66,6 @@ function load() {
     if(i <= paddingDays){
       daySquare.classList.add('prevday');
       const dayString = `${month}/${prevDaysInMonth - i + paddingDays}/${year}`;
-      currentDayString = dayString;
       daySquare.innerText = prevDaysInMonth + i - paddingDays
       const eventForDay = events.find(e => e.date === dayString);
 
@@ -108,7 +107,7 @@ function load() {
     else {
       daySquare.classList.add('nextday');
       const dayString = `${month + 2}/${i - daysInMonth - paddingDays}/${year}`;
-      currentDayString = dayString;
+
       daySquare.innerText = i - daysInMonth - paddingDays;
       const eventForDay = events.find(e => e.date === dayString);
 
