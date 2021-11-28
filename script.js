@@ -10,6 +10,39 @@ const backDrop = document.getElementById('modalBackDrop');
 const eventTitleInput = document.getElementById('eventTitleInput');
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+const alarmContainer = document.getElementById('alarmModal');
+const currentTime = alarmContainer.querySelector('h3');
+const setTime = alarmContainer.querySelector('input');
+
+function getAlarm(){
+  const setValue = setTime.value;
+  const date = new Date();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const current = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
+  console.log(setValue);
+  // if(current === setValue){
+  //   alarmContainer.classList.add('alarmOn');
+  // }
+  // else{
+  //   alarmContainer.classList.remove('alarmOn');
+  // }
+}
+
+function getTime(){
+  const date = new Date();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+  currentTime.innerText = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+}
+
+function init(){
+  getTime();
+  setInterval(getTime, 1000);
+  setInterval(getAlarm, 1000);
+}
+
 function openList(date) {
   clickdate = date;
   if(date === null)
@@ -210,6 +243,8 @@ function saveList() {
     });
 
     openList(clickdate);
+    closeModal();
+    openList(clickdate);
   } else {
     eventTitleInput.classList.add('error');
   }
@@ -224,10 +259,26 @@ function deleteEvent() {
   events = events.filter(e => e.date !== clickdate);
   events.push(event);
   localStorage.setItem('events', JSON.stringify(events));
-  openList();
+  //console.log(clickdate);
+  openList(clickdate);
   closeModal();
   openList(clickdate);
   }
+}
+
+function alarmModal(){
+  alarmContainer.style.display = 'block';
+}
+
+function alarmSaveList(){
+ saveList();
+ 
+ alarmContainer.style.display = 'none';
+}
+
+
+function alarmCloseModal(){
+  alarmContainer.style.display = 'none';
 }
 
 let monthClick = 0;
@@ -254,8 +305,11 @@ function initButtons() {
   document.getElementById('deleteButton').addEventListener('click', deleteEvent);
   document.getElementById('closeButton').addEventListener('click', closeModal);
   document.getElementById('rewriteButton').addEventListener('click', rewriteModal);
-  
-  
+
+  document.getElementById('alarmButton').addEventListener('click', alarmModal);
+  document.getElementById('alarmSaveButton').addEventListener('click', alarmSaveList);
+  document.getElementById('alarmCloseButton').addEventListener('click', alarmCloseModal);
 }
+init();
 initButtons();
 setDate();
