@@ -2,6 +2,7 @@ let moveMonth = 0;
 let clickdate = null;
 let checklists = [];
 let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
+let alarm_t = null;
 
 const calendar = document.getElementById('calendar');
 const dayList = document.getElementById('newEventModal');
@@ -14,6 +15,8 @@ const alarmContainer = document.getElementById('alarmModal');
 const currentTime = alarmContainer.querySelector('h3');
 const setTime = alarmContainer.querySelector('input');
 
+var audio = new Audio('audio_file.mp3');
+
 function getAlarm(){
   const setValue = setTime.value;
   const date = new Date();
@@ -21,12 +24,16 @@ function getAlarm(){
   const minutes = date.getMinutes();
   const current = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
   console.log(setValue);
-  // if(current === setValue){
-  //   alarmContainer.classList.add('alarmOn');
-  // }
-  // else{
-  //   alarmContainer.classList.remove('alarmOn');
-  // }
+  if(current === setValue){
+    audio.play();
+  }
+  else{
+    audio.pause();
+  }
+}
+
+function checkAlarm(){
+
 }
 
 function getTime(){
@@ -41,6 +48,7 @@ function init(){
   getTime();
   setInterval(getTime, 1000);
   setInterval(getAlarm, 1000);
+  checkAlarm();
 }
 
 function openList(date) {
@@ -228,6 +236,7 @@ function rewriteModal() {
 }
 
 function saveList() {
+
   if (eventTitleInput.value) {
     let event = events.find(e => e.date === clickdate);
     events = events.filter(e => e.date !== clickdate);
@@ -235,12 +244,16 @@ function saveList() {
     if (event) {
       newlist = event.lists;
     }
+    if(alarm_t != null)
+      alarm_t = setValue;
     newlist.push(eventTitleInput.value);
     eventTitleInput.value = null;
     events.push({
       date: clickdate,
       lists: newlist,
+      alarm: alarm_t
     });
+    alarm_t = null;
     localStorage.setItem('events', JSON.stringify(events));
     //console.log("events:"+events.forEach(e => console.log(e.lists)));
 
@@ -260,6 +273,7 @@ function saveList() {
 
 function deleteEvent() {
   if (checklists.length !== 0) {
+    console.log()
     let event = events.find(e => e.date === clickdate);
     for (let i = 0; i < checklists.length; i++) {
       event.lists = event.lists.filter(e => e !== checklists[i]);
@@ -284,7 +298,6 @@ function alarmModal(){
 
 function alarmSaveList(){
  saveList();
- 
  alarmContainer.style.display = 'none';
 }
 
@@ -296,6 +309,14 @@ function alarmCloseModal(){
 let monthClick = 0;
 
 function initButtons() {
+// var context = new AudioContext();
+// var o = context.createOscillator();
+// o.type = "sine";
+// o.connect(context.destination);
+// o.start();
+
+
+
   document.getElementById('monthlySchedule').addEventListener('click', () => {
     //monthlyCheck = 1;
     openList();
