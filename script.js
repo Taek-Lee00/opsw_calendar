@@ -253,8 +253,6 @@ function saveList() {
     });
 
     openList(clickdate);
-    closeModal();
-    openList(clickdate);
   } else {
     eventTitleInput.classList.add('error');
   }
@@ -263,19 +261,6 @@ function saveList() {
 function deleteEvent() {
   if (checklists.length !== 0) {
     let event = events.find(e => e.date === clickdate);
-<<<<<<< HEAD
-  for(let i = 0 ; i < checklists.length ; i++){
-    event.lists = event.lists.filter(e => e !== checklists[i]);
-  }
-  events = events.filter(e => e.date !== clickdate);
-  events.push(event);
-  localStorage.setItem('events', JSON.stringify(events));
-  //console.log(clickdate);
-  openList(clickdate);
-  closeModal();
-  openList(clickdate);
-=======
-
     for (let i = 0; i < checklists.length; i++) {
       event.lists = event.lists.filter(e => e !== checklists[i]);
     }
@@ -290,7 +275,6 @@ function deleteEvent() {
     });
     openList(clickdate);
 
->>>>>>> 1198b40474092c6168f4664c39358d8233e9b41b
   }
 }
 
@@ -334,13 +318,9 @@ function initButtons() {
   document.getElementById('closeButton').addEventListener('click', closeModal);
   document.getElementById('rewriteButton').addEventListener('click', rewriteModal);
 
-<<<<<<< HEAD
   document.getElementById('alarmButton').addEventListener('click', alarmModal);
   document.getElementById('alarmSaveButton').addEventListener('click', alarmSaveList);
   document.getElementById('alarmCloseButton').addEventListener('click', alarmCloseModal);
-=======
-
->>>>>>> 1198b40474092c6168f4664c39358d8233e9b41b
 }
 init();
 initButtons();
