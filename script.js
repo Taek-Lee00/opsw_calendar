@@ -12,6 +12,8 @@ const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 
 function openList(date) {
   clickdate = date;
+  if(date === null)
+     return
   backDrop.style.display = 'block';
   dayList.style.display = 'block';
   const event = events.find(e => e.date === clickdate);
@@ -45,7 +47,7 @@ function openList(date) {
       //dayList.style.display = 'block';
     }
     var checkbox = document.querySelector("input[id=ckid]");
-  checkbox.addEventListener('change', function() {
+    checkbox.addEventListener('change', function() {
     if(this.checked)
       checklists.push(checkbox.value);
     else
@@ -78,6 +80,7 @@ function setDate() {
   if (daysEmpty + daysInMonth > 35) {
     dayNum = 42;
   }
+
   for (let i = 1; i <= dayNum; i++) {
     const dayContent = document.createElement('div');
     dayContent.classList.add('day');
@@ -85,6 +88,7 @@ function setDate() {
       dayContent.classList.add('prevday');
       const dayString = `${month}/${prevDaysInMonth - i + daysEmpty}/${year}`;
       dayContent.innerText = prevDaysInMonth + i - daysEmpty
+
       const eventForDay = events.find(e => e.date === dayString);
 
       if (i - daysEmpty === day && moveMonth === 0) {
@@ -123,10 +127,12 @@ function setDate() {
       dayContent.addEventListener('click', () => openList(dayString));
     }
     else {
+
       dayContent.classList.add('nextday');
       const dayString = `${month + 2}/${i - daysInMonth - daysEmpty}/${year}`;
 
       dayContent.innerText = i - daysInMonth - daysEmpty;
+
       const eventForDay = events.find(e => e.date === dayString);
 
       if (i - daysEmpty === day && moveMonth === 0) {
@@ -210,7 +216,8 @@ function saveList() {
 }
 
 function deleteEvent() {
-  let event = events.find(e => e.date === clickdate);
+  if(checklists[0]){
+    let event = events.find(e => e.date === clickdate);
   for(let i = 0 ; i < checklists.length ; i++){
     event.lists = event.lists.filter(e => e !== checklists[i]);
   }
@@ -220,12 +227,12 @@ function deleteEvent() {
   openList();
   closeModal();
   openList(clickdate);
+  }
 }
 
 let monthClick = 0;
 
 function initButtons() {
-  localStorage.clear();
   document.getElementById('monthlySchedule').addEventListener('click', () => {
     //monthlyCheck = 1;
     openList();
