@@ -8,3 +8,7 @@ Name : opsource_calendar
 Demo video :
 
 Instruction : 
+Daily / Monthly Schedule: In this app you can add daily events and monthly Schedule on the callendar by clicking the callendar and writing some texts and saving it. you can also delete the schedule by using delete button.
+
+Daily Alarm: In this app you can use alarm system by adding alarm in the calender.
+  You can easily add the alarm by clicking the day that you want to add and write the text and click the alarm button. As you click the alarm button you can see a block that shows the current time. As you set the alarm time and clicking the save button, the alarm will be added on the calendar.   
