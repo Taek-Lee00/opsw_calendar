@@ -194,7 +194,7 @@ function rewriteModal() {
   setDate();
 }
 
-function saveList() {
+function saveList(alarm_t) {
   if (eventTitleInput.value) {
     let event = events.find(e => e.date === clickdate);
     events = events.filter(e => e.date !== clickdate);
@@ -207,6 +207,7 @@ function saveList() {
     events.push({
       date: clickdate,
       lists: newlist,
+      alarm: alarm_t,
     });
     localStorage.setItem('events', JSON.stringify(events));
     //console.log("events:"+events.forEach(e => console.log(e.lists)));
