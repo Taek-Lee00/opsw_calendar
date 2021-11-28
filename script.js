@@ -117,7 +117,7 @@ function setDate() {
         eventDiv.classList.add('event');
         eventDiv.innerText = eventForDay.lists[k];
         dayContent.appendChild(eventDiv);
-      }
+        } 
       }
 
       dayContent.addEventListener('click', () => openList(dayString));
@@ -218,15 +218,18 @@ function deleteEvent() {
   events.push(event);
   localStorage.setItem('events', JSON.stringify(events));
   openList();
-  //closeModal();
+  closeModal();
+  openList(clickdate);
 }
 
 let monthClick = 0;
 
 function initButtons() {
+  localStorage.clear();
   document.getElementById('monthlySchedule').addEventListener('click', () => {
-    monthlyCheck = 1;
+    //monthlyCheck = 1;
     openList();
+    //localStorage.clear();
   });
 
   document.getElementById('nextButton').addEventListener('click', () => {
@@ -247,6 +250,5 @@ function initButtons() {
   
   
 }
-
 initButtons();
 setDate();
