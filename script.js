@@ -227,6 +227,7 @@ function saveList() {
 function deleteEvent() {
   if (checklists.length!==0) {
     let event = events.find(e => e.date === clickdate);
+
     for (let i = 0; i < checklists.length; i++) {
       event.lists = event.lists.filter(e => e !== checklists[i]);
     }
@@ -240,15 +241,16 @@ function deleteEvent() {
         return e.parentNode.removeChild(e)
     });
     openList(clickdate);
-  }
+
 }
 
 let monthClick = 0;
 
 function initButtons() {
-  //localStorage.clear();
   document.getElementById('monthlySchedule').addEventListener('click', () => {
+    //monthlyCheck = 1;
     openList();
+    //localStorage.clear();
   });
 
   document.getElementById('nextButton').addEventListener('click', () => {
@@ -269,6 +271,5 @@ function initButtons() {
 
 
 }
-
 initButtons();
 setDate();
