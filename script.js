@@ -2,6 +2,8 @@ let moveMonth = 0;
 let clickdate = null;
 let checklists = [];
 let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
+let alarmt = null;
+let today = null;
 
 const calendar = document.getElementById('calendar');
 const dayList = document.getElementById('newEventModal');
@@ -14,22 +16,32 @@ const alarmContainer = document.getElementById('alarmModal');
 const currentTime = alarmContainer.querySelector('h3');
 const setTime = alarmContainer.querySelector('input');
 
-function getAlarm(){
+function getAlarm() {
   const setValue = setTime.value;
   const date = new Date();
   const hours = date.getHours();
   const minutes = date.getMinutes();
   const current = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
-  console.log(setValue);
-  // if(current === setValue){
-  //   alarmContainer.classList.add('alarmOn');
-  // }
-  // else{
-  //   alarmContainer.classList.remove('alarmOn');
-  // }
+  let eventa = events.filter(e => e.date === today);
+  if(eventa.length !== 0){
+    var alist = eventa[0].lists;
+    alist = alist.map(e => {
+      if(e.indexOf('*/*At:')>0)
+        return e.split("*/*At:")[1]})
+    
+    alist.forEach(e => {
+      if(current === e){
+        console.log("allarm");
+      alarmContainer.classList.add('alarmOn');
+    }
+    else{
+      alarmContainer.classList.remove('alarmOn');
+    }})
+  }
+  
 }
 
-function getTime(){
+function getTime() {
   const date = new Date();
   const hours = date.getHours();
   const minutes = date.getMinutes();
@@ -37,7 +49,7 @@ function getTime(){
   currentTime.innerText = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
 }
 
-function init(){
+function init() {
   getTime();
   setInterval(getTime, 1000);
   setInterval(getAlarm, 1000);
@@ -155,6 +167,7 @@ function setDate() {
 
       if (i - daysEmpty === day && moveMonth === 0) {
         dayContent.id = 'currentDay';
+        today = dayString;
       }
 
 
@@ -227,7 +240,7 @@ function rewriteModal() {
   setDate();
 }
 
-function saveList(alarm_t) {
+function saveList() {
   if (eventTitleInput.value) {
     let event = events.find(e => e.date === clickdate);
     events = events.filter(e => e.date !== clickdate);
@@ -235,13 +248,16 @@ function saveList(alarm_t) {
     if (event) {
       newlist = event.lists;
     }
-    newlist.push(eventTitleInput.value);
+    if (alarmt === null)
+      newlist.push(eventTitleInput.value);
+    else
+      newlist.push(eventTitleInput.value + "*/*At:" + alarmt);
     eventTitleInput.value = null;
     events.push({
       date: clickdate,
       lists: newlist,
-      alarm: alarm_t,
     });
+    alarmt = null;
     localStorage.setItem('events', JSON.stringify(events));
     //console.log("events:"+events.forEach(e => console.log(e.lists)));
 
@@ -279,18 +295,19 @@ function deleteEvent() {
   }
 }
 
-function alarmModal(){
+function alarmModal() {
   alarmContainer.style.display = 'block';
 }
 
-function alarmSaveList(){
- saveList();
- 
- alarmContainer.style.display = 'none';
+function alarmSaveList() {
+  alarmt = setTime.value;
+  saveList();
+
+  alarmContainer.style.display = 'none';
 }
 
 
-function alarmCloseModal(){
+function alarmCloseModal() {
   alarmContainer.style.display = 'none';
 }
 
