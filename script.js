@@ -12,24 +12,27 @@ const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 
 function openList(date) {
   clickdate = date;
-  if(date === null)
-     return
+  if (date === null)
+    return
   backDrop.style.display = 'block';
   dayList.style.display = 'block';
   const event = events.find(e => e.date === clickdate);
-    if (event) {
+  if (event) {
+    if (event.lists.length !== 0) {
       const eventList = document.createElement('div');
       eventList.classList.add('List');
+      eventList.id = 'List';
       const eventtitle = document.createElement('h2');
       eventtitle.id = 'List-title';
       eventtitle.innerText = "What I have to Do";
-      if(event.lists){
+      if (event.lists) {
         for (let k = 0; k < event.lists.length; k++) {
           let container = document.createElement('div');
           let ckbox = document.createElement('input');
           ckbox.type = "checkbox";
           ckbox.id = 'ckid';
           ckbox.value = event.lists[k];
+         // console.log(event.lists[k])
           let label = document.createElement('label')
           label.htmlFor = 'ckid';
           label.appendChild(document.createTextNode(event.lists[k]));
@@ -40,20 +43,26 @@ function openList(date) {
         eventList.appendChild(eventtitle);
         dayList.appendChild(eventList);
       }
-      //document.getElementById('eventText').innerText = event.title;
-      //document.getElementById('eventText').innerText = "IN WHERE";
-      //deleteEventModal.style.display = 'block';
-    } else {
-      //dayList.style.display = 'block';
     }
-    var checkbox = document.querySelector("input[id=ckid]");
-    checkbox.addEventListener('change', function() {
-    if(this.checked)
-      checklists.push(checkbox.value);
-    else
-      checklists.pop(checkbox.value);
+    //document.getElementById('eventText').innerText = event.title;
+    //document.getElementById('eventText').innerText = "IN WHERE";
+    //deleteEventModal.style.display = 'block';
+  } else {
+    //dayList.style.display = 'block';
   }
-  );
+  var checkbox = document.querySelectorAll("input");
+  checkbox.forEach(e=>e.addEventListener('change', function () {
+    if (this.checked){
+      checklists.push(e.value);
+      //console.log("chekced")
+    }
+      
+    else
+      {checklists.pop(e.value);
+        //console.log("unchekced")
+      } }
+  
+  ))
 }
 
 function setDate() {
@@ -118,10 +127,10 @@ function setDate() {
       if (eventForDay) {
         for (let k = 0; k < eventForDay.lists.length; k++) {
           const eventDiv = document.createElement('div');
-        eventDiv.classList.add('event');
-        eventDiv.innerText = eventForDay.lists[k];
-        dayContent.appendChild(eventDiv);
-      }
+          eventDiv.classList.add('event');
+          eventDiv.innerText = eventForDay.lists[k];
+          dayContent.appendChild(eventDiv);
+        }
       }
 
       dayContent.addEventListener('click', () => openList(dayString));
@@ -162,12 +171,12 @@ function closeModal() {
   eventTitleInput.value = '';
   clickdate = null;
   var element = null;
-    var elements = document.querySelectorAll('[id]');
-    console.log(elements)
-    elements.forEach(e => {
-        if (e.id === 'List-title')
-            return e.parentNode.removeChild(e)
-    });
+  var elements = document.querySelectorAll('[id]');
+  //console.log(elements)
+  elements.forEach(e => {
+    if (e.id === 'List')
+      return e.parentNode.removeChild(e)
+  });
   setDate();
 }
 
@@ -190,23 +199,23 @@ function saveList() {
     events = events.filter(e => e.date !== clickdate);
     let newlist = [];
     if (event) {
-        newlist = event.lists;
+      newlist = event.lists;
     }
     newlist.push(eventTitleInput.value);
-    eventTitleInput.value =null;    
+    eventTitleInput.value = null;
     events.push({
-        date: clickdate,
-        lists: newlist,
+      date: clickdate,
+      lists: newlist,
     });
     localStorage.setItem('events', JSON.stringify(events));
-    console.log(events);
+    //console.log("events:"+events.forEach(e => console.log(e.lists)));
 
     var element = null;
     var elements = document.querySelectorAll('[id]');
-    console.log(elements)
+    //console.log(elements)
     elements.forEach(e => {
-        if (e.id === 'List-title')
-            return e.parentNode.removeChild(e)
+      if (e.id === 'List')
+        return e.parentNode.removeChild(e)
     });
 
     openList(clickdate);
@@ -216,20 +225,22 @@ function saveList() {
 }
 
 function deleteEvent() {
-  if(checklists[0]){
+  if (checklists.length!==0) {
     let event = events.find(e => e.date === clickdate);
-  for(let i = 0 ; i < checklists.length ; i++){
-    event.lists = event.lists.filter(e => e !== checklists[i]);
+    for (let i = 0; i < checklists.length; i++) {
+      event.lists = event.lists.filter(e => e !== checklists[i]);
+    }
+    events = events.filter(e => e.date !== clickdate);
+    events.push(event);
+    localStorage.setItem('events', JSON.stringify(events));
+    var element = null;
+    var elements = document.querySelectorAll('[id]');
+    elements.forEach(e => {
+      if (e.id === 'List')
+        return e.parentNode.removeChild(e)
+    });
+    openList(clickdate);
   }
-  events = events.filter(e => e.date !== clickdate);
-  events.push(event);
-  localStorage.setItem('events', JSON.stringify(events));
-  openList();
-  closeModal();
-  openList();
-  }
-  
-  
 }
 
 let monthClick = 0;
@@ -255,8 +266,8 @@ function initButtons() {
   document.getElementById('deleteButton').addEventListener('click', deleteEvent);
   document.getElementById('closeButton').addEventListener('click', closeModal);
   document.getElementById('rewriteButton').addEventListener('click', rewriteModal);
-  
-  
+
+
 }
 
 initButtons();
