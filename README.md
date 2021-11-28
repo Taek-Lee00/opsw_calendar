@@ -2,7 +2,8 @@
 
 Name : opsource_calendar
 
-![thumbnail](https://user-images.githubusercontent.com/82808715/143770597-e3c3c8b2-8f74-4aa3-8787-06505d7d1815.png)
+![thumbnail 2](https://user-images.githubusercontent.com/82808715/143770677-0ce6f81f-9d69-41c8-9ad3-3c2b53823cd6.png)
+
 
 
 Demo video :
