@@ -1,184 +1,259 @@
-let nav = 0;
-let clicked = null;
+let moveMonth = 0;
+let clickdate = null;
+let checklists = [];
 let events = localStorage.getItem('events') ? JSON.parse(localStorage.getItem('events')) : [];
 
 const calendar = document.getElementById('calendar');
-const newEventModal = document.getElementById('newEventModal');
+const dayList = document.getElementById('newEventModal');
 const deleteEventModal = document.getElementById('deleteEventModal');
 const backDrop = document.getElementById('modalBackDrop');
 const eventTitleInput = document.getElementById('eventTitleInput');
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-function openModal(date) {
-  clicked = date;
-
-  const eventForDay = events.find(e => e.date === clicked);
-
-  if (eventForDay) {
-    document.getElementById('eventText').innerText = eventForDay.title;
-    deleteEventModal.style.display = 'block';
-  } else {
-    newEventModal.style.display = 'block';
-  }
-
+function openList(date) {
+  clickdate = date;
+  if(date === null)
+     return
   backDrop.style.display = 'block';
+  dayList.style.display = 'block';
+  const event = events.find(e => e.date === clickdate);
+    if (event) {
+      const eventList = document.createElement('div');
+      eventList.classList.add('List');
+      const eventtitle = document.createElement('h2');
+      eventtitle.id = 'List-title';
+      eventtitle.innerText = "What I have to Do";
+      if(event.lists){
+        for (let k = 0; k < event.lists.length; k++) {
+          let container = document.createElement('div');
+          let ckbox = document.createElement('input');
+          ckbox.type = "checkbox";
+          ckbox.id = 'ckid';
+          ckbox.value = event.lists[k];
+          let label = document.createElement('label')
+          label.htmlFor = 'ckid';
+          label.appendChild(document.createTextNode(event.lists[k]));
+          container.appendChild(ckbox);
+          container.appendChild(label);
+          eventtitle.appendChild(container);
+        }
+        eventList.appendChild(eventtitle);
+        dayList.appendChild(eventList);
+      }
+      //document.getElementById('eventText').innerText = event.title;
+      //document.getElementById('eventText').innerText = "IN WHERE";
+      //deleteEventModal.style.display = 'block';
+    } else {
+      //dayList.style.display = 'block';
+    }
+    var checkbox = document.querySelector("input[id=ckid]");
+    checkbox.addEventListener('change', function() {
+    if(this.checked)
+      checklists.push(checkbox.value);
+    else
+      checklists.pop(checkbox.value);
+  }
+  );
 }
 
-function load() {
+function setDate() {
   const dt = new Date();
-
-  if (nav !== 0) {
-    dt.setMonth(new Date().getMonth() + nav);
-  }
-
+  dt.setMonth(new Date().getMonth() + moveMonth);
   const day = dt.getDate();
   const month = dt.getMonth();
   const year = dt.getFullYear();
 
-  const firstDayOfMonth = new Date(year, month, 1);
+  const dayStart = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const prevDaysInMonth = new Date(year, month, 0).getDate();
-  
-  const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  });
-  const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
 
-  document.getElementById('monthDisplay').innerText = 
-    `${dt.toLocaleDateString('en-us', { month: 'long' })} ${year}`;
+  const dateString = dayStart.toLocaleDateString('en-us', {
+    weekday: 'long',
+  });
+  const daysEmpty = weekdays.indexOf(dateString.split(', ')[0]);
+
+  document.getElementById('monthDisplay').innerText = `${dt.toLocaleDateString('en-us', { month: 'long' })} ${year}`;
 
   calendar.innerHTML = '';
 
   let dayNum = 35;
-  if(paddingDays + daysInMonth > 35){
+  if (daysEmpty + daysInMonth > 35) {
     dayNum = 42;
   }
-  for(let i = 1; i <= dayNum; i++) {
-    const daySquare = document.createElement('div');
-    daySquare.classList.add('day');
-
-    
-    //const dayString = `${month + 1}/${i - paddingDays}/${year}`;
-
-    if(i <= paddingDays){
-      daySquare.classList.add('prevday');
-      const dayString = `${month + 1}/${prevDaysInMonth - i + paddingDays}/${year}`;
-      daySquare.innerText = prevDaysInMonth + i - paddingDays
+  for (let i = 1; i <= dayNum; i++) {
+    const dayContent = document.createElement('div');
+    dayContent.classList.add('day');
+    if (i <= daysEmpty) {
+      dayContent.classList.add('prevday');
+      const dayString = `${month}/${prevDaysInMonth - i + daysEmpty}/${year}`;
+      dayContent.innerText = prevDaysInMonth + i - daysEmpty
       const eventForDay = events.find(e => e.date === dayString);
 
-      if (i - paddingDays === day && nav === 0) {
-        daySquare.id = 'currentDay';
+      if (i - daysEmpty === day && moveMonth === 0) {
+        dayContent.id = 'currentDay';
       }
-
-      //if()
-
-     if (eventForDay) {
-        const eventDiv = document.createElement('div');
-        eventDiv.classList.add('event');
-        eventDiv.innerText = eventForDay.title;
-        daySquare.appendChild(eventDiv);
-      }
-
-      daySquare.addEventListener('click', () => openModal(dayString));
-    }
-    else if (i > paddingDays && i <= daysInMonth + paddingDays) {
-      daySquare.classList.add('day');
-      const dayString = `${month + 1}/${i - paddingDays}/${year}`;
-      daySquare.innerText = i - paddingDays;
-      const eventForDay = events.find(e => e.date === dayString);
-
-      if (i - paddingDays === day && nav === 0) {
-        daySquare.id = 'currentDay';
-      }
-
-      //if()
-
       if (eventForDay) {
         const eventDiv = document.createElement('div');
         eventDiv.classList.add('event');
-        eventDiv.innerText = eventForDay.title;
-        daySquare.appendChild(eventDiv);
+        eventDiv.innerText = eventForDay.lists[0];
+        //추가
+        dayContent.appendChild(eventDiv);
       }
 
-      daySquare.addEventListener('click', () => openModal(dayString));
+      dayContent.addEventListener('click', () => openList(dayString));
+    }
+    else if (i > daysEmpty && i <= daysInMonth + daysEmpty) {
+      dayContent.classList.add('day');
+      const dayString = `${month + 1}/${i - daysEmpty}/${year}`;
+      dayContent.innerText = i - daysEmpty;
+      const eventForDay = events.find(e => e.date === dayString);
+
+      if (i - daysEmpty === day && moveMonth === 0) {
+        dayContent.id = 'currentDay';
+      }
+
+
+      if (eventForDay) {
+        for (let k = 0; k < eventForDay.lists.length; k++) {
+          const eventDiv = document.createElement('div');
+        eventDiv.classList.add('event');
+        eventDiv.innerText = eventForDay.lists[k];
+        dayContent.appendChild(eventDiv);
+      }
+      }
+
+      dayContent.addEventListener('click', () => openList(dayString));
     }
     else {
-      daySquare.classList.add('nextday');
-      const dayString = `${month + 1}/${i - daysInMonth - paddingDays}/${year}`;
-      daySquare.innerText = i - daysInMonth - paddingDays;
+      dayContent.classList.add('nextday');
+      const dayString = `${month + 2}/${i - daysInMonth - daysEmpty}/${year}`;
+
+      dayContent.innerText = i - daysInMonth - daysEmpty;
       const eventForDay = events.find(e => e.date === dayString);
 
-      if (i - paddingDays === day && nav === 0) {
-        daySquare.id = 'currentDay';
+      if (i - daysEmpty === day && moveMonth === 0) {
+        dayContent.id = 'currentDay';
       }
 
-      //if()
 
       if (eventForDay) {
         const eventDiv = document.createElement('div');
         eventDiv.classList.add('event');
         eventDiv.innerText = eventForDay.title;
-        daySquare.appendChild(eventDiv);
+        dayContent.appendChild(eventDiv);
       }
 
-      daySquare.addEventListener('click', () => openModal(dayString));
+      dayContent.addEventListener('click', () => openList(dayString));
     }
 
-    calendar.appendChild(daySquare);    
+    calendar.appendChild(dayContent);
   }
 }
 
 function closeModal() {
   eventTitleInput.classList.remove('error');
-  newEventModal.style.display = 'none';
+  dayList.style.display = 'none';
   deleteEventModal.style.display = 'none';
   backDrop.style.display = 'none';
   eventTitleInput.value = '';
-  clicked = null;
-  load();
+  clickdate = null;
+  var element = null;
+    var elements = document.querySelectorAll('[id]');
+    console.log(elements)
+    elements.forEach(e => {
+        if (e.id === 'List-title')
+            return e.parentNode.removeChild(e)
+    });
+  setDate();
 }
 
-function saveEvent() {
-  if (eventTitleInput.value) {
-    eventTitleInput.classList.remove('error');
+function rewriteModal() {
+  events = events.filter(e => e.date !== clickdate);
+  localStorage.setItem('events', JSON.stringify(events));
+  eventTitleInput.classList.remove('error');
+  dayList.style.display = 'none';
+  deleteEventModal.style.display = 'none';
+  backDrop.style.display = 'none';
+  eventTitleInput.value = '';
+  setDate();
+  openList(clickdate);
+  setDate();
+}
 
+function saveList() {
+  if (eventTitleInput.value) {
+    let event = events.find(e => e.date === clickdate);
+    events = events.filter(e => e.date !== clickdate);
+    let newlist = [];
+    if (event) {
+        newlist = event.lists;
+    }
+    newlist.push(eventTitleInput.value);
+    eventTitleInput.value =null;    
     events.push({
-      date: clicked,
-      title: eventTitleInput.value,
+        date: clickdate,
+        lists: newlist,
+    });
+    localStorage.setItem('events', JSON.stringify(events));
+    console.log(events);
+
+    var element = null;
+    var elements = document.querySelectorAll('[id]');
+    console.log(elements)
+    elements.forEach(e => {
+        if (e.id === 'List-title')
+            return e.parentNode.removeChild(e)
     });
 
-    localStorage.setItem('events', JSON.stringify(events));
-    closeModal();
+    openList(clickdate);
   } else {
     eventTitleInput.classList.add('error');
   }
 }
 
 function deleteEvent() {
-  events = events.filter(e => e.date !== clicked);
+  if(checklists[0]){
+    let event = events.find(e => e.date === clickdate);
+  for(let i = 0 ; i < checklists.length ; i++){
+    event.lists = event.lists.filter(e => e !== checklists[i]);
+  }
+  events = events.filter(e => e.date !== clickdate);
+  events.push(event);
   localStorage.setItem('events', JSON.stringify(events));
+  openList();
   closeModal();
+  openList();
+  }
+  
+  
 }
 
+let monthClick = 0;
+
 function initButtons() {
+  //localStorage.clear();
+  document.getElementById('monthlySchedule').addEventListener('click', () => {
+    openList();
+  });
+
   document.getElementById('nextButton').addEventListener('click', () => {
-    nav++;
-    load();
+    moveMonth++;
+    setDate();
   });
 
   document.getElementById('backButton').addEventListener('click', () => {
-    nav--;
-    load();
+    moveMonth--;
+    setDate();
   });
 
-  document.getElementById('saveButton').addEventListener('click', saveEvent);
+  document.getElementById('saveButton').addEventListener('click', saveList);
   document.getElementById('cancelButton').addEventListener('click', closeModal);
   document.getElementById('deleteButton').addEventListener('click', deleteEvent);
   document.getElementById('closeButton').addEventListener('click', closeModal);
+  document.getElementById('rewriteButton').addEventListener('click', rewriteModal);
+  
+  
 }
 
 initButtons();
-load();
+setDate();
