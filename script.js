@@ -32,7 +32,7 @@ function openList(date) {
           ckbox.type = "checkbox";
           ckbox.id = 'ckid';
           ckbox.value = event.lists[k];
-         // console.log(event.lists[k])
+          // console.log(event.lists[k])
           let label = document.createElement('label')
           label.htmlFor = 'ckid';
           label.appendChild(document.createTextNode(event.lists[k]));
@@ -51,17 +51,18 @@ function openList(date) {
     //dayList.style.display = 'block';
   }
   var checkbox = document.querySelectorAll("input");
-  checkbox.forEach(e=>e.addEventListener('change', function () {
-    if (this.checked){
+  checkbox.forEach(e => e.addEventListener('change', function () {
+    if (this.checked) {
       checklists.push(e.value);
       //console.log("chekced")
     }
-      
-    else
-      {checklists.pop(e.value);
-        //console.log("unchekced")
-      } }
-  
+
+    else {
+      checklists.pop(e.value);
+      //console.log("unchekced")
+    }
+  }
+
   ))
 }
 
@@ -225,7 +226,7 @@ function saveList() {
 }
 
 function deleteEvent() {
-  if (checklists.length!==0) {
+  if (checklists.length !== 0) {
     let event = events.find(e => e.date === clickdate);
 
     for (let i = 0; i < checklists.length; i++) {
@@ -242,6 +243,7 @@ function deleteEvent() {
     });
     openList(clickdate);
 
+  }
 }
 
 let monthClick = 0;
