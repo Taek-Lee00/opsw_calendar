@@ -58,7 +58,6 @@ function init() {
   getTime();
   setInterval(getTime, 1000);
   setInterval(getAlarm, 1000);
-  checkAlarm();
 }
 
 function openList(date) {
@@ -263,7 +262,7 @@ function saveList() {
     events.push({
       date: clickdate,
       lists: newlist,
-      alarm: alarm_t
+      alarm: alarmt
     });
     alarmt = null;
     localStorage.setItem('events', JSON.stringify(events));
@@ -323,13 +322,6 @@ function alarmCloseModal() {
 let monthClick = 0;
 
 function initButtons() {
-// var context = new AudioContext();
-// var o = context.createOscillator();
-// o.type = "sine";
-// o.connect(context.destination);
-// o.start();
-
-
 
   document.getElementById('monthlySchedule').addEventListener('click', () => {
     //monthlyCheck = 1;
