@@ -98,6 +98,21 @@ button {
   position: absolute;
   font-family: sans-serif;
 }
+#alarmModal{
+  display: none;
+  z-index: 20;
+  padding: 25px;
+  background-color: #e8f4fa;
+  box-shadow: 0px 0px 3px black;
+  border-radius: 5px;
+  width: 350px;
+  top: 100px;
+  left: calc(50% - 175px);
+  position: absolute;
+  font-family: sans-serif;
+}
+
+
 #eventTitleInput {
   padding: 10px;
   width: 100%;
@@ -111,15 +126,20 @@ button {
 #eventTitleInput.error {
   border: 2px solid red;
 }
-#cancelButton, #deleteButton {
+#cancelButton, #alarmCloseButton{
   background-color: #d36c6c;
 }
-#saveButton, #closeButton {
+#saveButton, #closeButton, #alarmSaveButton{
   background-color: #92a1d1;
 }
-#rewriteButton{
+#deleteButton, #alarmDeleteButton{
   width: 75px;
   background-color: rgb(196, 121, 23);
+}
+
+#alarmButton{
+  width: 75px;
+  background-color: rgb(28, 55, 207);
 }
 #monthlyScheduleButton{
   background-color: rgb(196, 121, 23);
