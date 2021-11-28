@@ -80,6 +80,7 @@ function setDate() {
   if (daysEmpty + daysInMonth > 35) {
     dayNum = 42;
   }
+
   for (let i = 1; i <= dayNum; i++) {
     const dayContent = document.createElement('div');
     dayContent.classList.add('day');
@@ -87,6 +88,7 @@ function setDate() {
       dayContent.classList.add('prevday');
       const dayString = `${month}/${prevDaysInMonth - i + daysEmpty}/${year}`;
       dayContent.innerText = prevDaysInMonth + i - daysEmpty
+
       const eventForDay = events.find(e => e.date === dayString);
 
       if (i - daysEmpty === day && moveMonth === 0) {
@@ -125,10 +127,12 @@ function setDate() {
       dayContent.addEventListener('click', () => openList(dayString));
     }
     else {
+
       dayContent.classList.add('nextday');
       const dayString = `${month + 2}/${i - daysInMonth - daysEmpty}/${year}`;
 
       dayContent.innerText = i - daysInMonth - daysEmpty;
+
       const eventForDay = events.find(e => e.date === dayString);
 
       if (i - daysEmpty === day && moveMonth === 0) {
