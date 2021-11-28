@@ -23,22 +23,24 @@ function getAlarm() {
   const minutes = date.getMinutes();
   const current = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}`;
   let eventa = events.filter(e => e.date === today);
-  if(eventa.length !== 0){
+
+  if (eventa.length !== 0) {
     var alist = eventa[0].lists;
     alist = alist.map(e => {
-      if(e.indexOf('*/*At:')>0)
-        return e.split("*/*At:")[1]})
-    
+      if (e.indexOf('*/*At:') > 0)
+        return e.split("*/*At:")[1]
+    })
+
     alist.forEach(e => {
-      if(current === e){
+      if (current === e) {
         console.log("allarm");
-      alarmContainer.classList.add('alarmOn');
-    }
-    else{
-      alarmContainer.classList.remove('alarmOn');
-    }})
+        alarmContainer.classList.add('alarmOn');
+      }
+      else {
+        alarmContainer.classList.remove('alarmOn');
+      }
+    })
   }
-  
 }
 
 function getTime() {
@@ -150,11 +152,12 @@ function setDate() {
         dayContent.id = 'currentDay';
       }
       if (eventForDay) {
-        const eventDiv = document.createElement('div');
-        eventDiv.classList.add('event');
-        eventDiv.innerText = eventForDay.lists[0];
-        //추가
-        dayContent.appendChild(eventDiv);
+        for (let k = 0; k < eventForDay.lists.length; k++) {
+          const eventDiv = document.createElement('div');
+          eventDiv.classList.add('event');
+          eventDiv.innerText = eventForDay.lists[k];
+          dayContent.appendChild(eventDiv);
+        }
       }
 
       dayContent.addEventListener('click', () => openList(dayString));
@@ -197,10 +200,13 @@ function setDate() {
 
 
       if (eventForDay) {
-        const eventDiv = document.createElement('div');
-        eventDiv.classList.add('event');
-        eventDiv.innerText = eventForDay.title;
-        dayContent.appendChild(eventDiv);
+        for (let k = 0; k < eventForDay.lists.length; k++) {
+          const eventDiv = document.createElement('div');
+          eventDiv.classList.add('event');
+          eventDiv.innerText = eventForDay.lists[k];
+          dayContent.appendChild(eventDiv);
+        }
+        
       }
 
       dayContent.addEventListener('click', () => openList(dayString));
